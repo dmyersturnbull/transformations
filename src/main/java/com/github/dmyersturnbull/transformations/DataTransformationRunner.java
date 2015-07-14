@@ -66,7 +66,7 @@ public class DataTransformationRunner {
 			Optional<File> output = cli.getFile("o");
 
 			if (input.isPresent() ^ output.isPresent()) {
-				m_helper.printHelp(true);
+				m_helper.printHelp();
 			} else if (!input.isPresent()) {
 				m_constructor.construct(cli).pipe();
 			} else {
