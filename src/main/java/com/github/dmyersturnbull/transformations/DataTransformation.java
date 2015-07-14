@@ -6,16 +6,31 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.util.function.Function;
 
 /**
  * A transformation between files or streams of the same data type, with one input stream/file to each output stream/file.
  * Using {@link FileTransformationApplier}, can apply a transformation to every file in a directory.
  * Can also pipe from stdin to stdout.
+ *
+ * Example implementation:
+ * @{code
+ *  public class X implements DataTransformation, Function&lt;String, String&gt; {
+ *      public static void main(String[] args) {
+ *          new CommandLineRunner(cli -> .
+ *      }
+ *      {@literal}Override
+ *      public void apply({@literal}Nonnull BufferedReader br, {@literal}Nonnull PrintWriter pw) {
+ *          br.lines().map(this).forEach(pw::println);
+ *      }
+ *      public void apply({@literal}Nonnull line) {
+ *          return line + "!";
+ *      }
+ *  }
+ * }
+ *
  * @author Douglas Myers-Turnbull
  */
-public interface DataTransformation extends Function<String, String> {
+public interface DataTransformation {
 
 	/**
 	 * @return The files that the transformation should can applied to.
@@ -26,14 +41,10 @@ public interface DataTransformation extends Function<String, String> {
 
 	/**
 	 * Pipes from stdin to stdout, uncompressed.
-	 * This should not be overriden.
+	 * This should not be overridden.
 	 */
 	default void pipe() throws IOException {
 		apply(FileTransformationUtils.stdin(), FileTransformationUtils.stdout());
-	}
-
-	default void apply(@Nonnull Path input, @Nonnull Path output) throws IOException {
-		apply(input.toFile(), output.toFile());
 	}
 
 	/**
@@ -44,8 +55,6 @@ public interface DataTransformation extends Function<String, String> {
 		new FileTransformationApplier(this, getApplicableFiles()).applyToAll(input, output);
 	}
 
-	default void apply(@Nonnull BufferedReader br, @Nonnull PrintWriter pw) throws IOException {
-		br.lines().map(this).forEach(pw::println);
-	}
+	void apply(@Nonnull BufferedReader br, @Nonnull PrintWriter pw) throws IOException;
 
 }

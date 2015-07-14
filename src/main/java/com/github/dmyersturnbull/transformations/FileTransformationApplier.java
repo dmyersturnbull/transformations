@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 /**
- * Just a set of static utilities to apply a {@link DataTransformation} to every file in a directory.
- * Note that this results in a cyclic dependency between this class and DataTransformation; this is unavoidable because
+ * Static utilities to apply a {@link DataTransformation} to every file in a directory.
+ * Note that this results in a cyclic dependency between this class and DataTransformation. This is unavoidable because
  * FileTransformation is an interface, but it's not a significant problem as long as this class doesn't grow.
  * @author Douglas Myers-Turnbull
  */
@@ -34,8 +34,10 @@ public class FileTransformationApplier {
 	public final void applyToAll(@Nonnull File input, @Nonnull File output) throws IOException {
 		if (input.isDirectory() && output.isDirectory()) {
 			for (File in : input.listFiles(m_filter)) {
-				File out = new File(output + File.separator + in.getName());
-				applyToFile(in, out);
+				if (!in.isDirectory()) { // never apply to directories
+					File out = new File(output + File.separator + in.getName());
+					applyToFile(in, out);
+				}
 			}
 		} else if (input.isDirectory() ^ output.isDirectory()) {
 			throw new IOException(input.getPath() + " and " + output.getPath() + " must both or neither be directories");
