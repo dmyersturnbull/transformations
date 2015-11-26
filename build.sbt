@@ -10,6 +10,9 @@ resolvers ++= Seq(
 	"Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 )
 
+assemblyJarName in assembly := name.value + "-" + version.value + ".jar"
+
+
 libraryDependencies ++= Seq(
 	"junit" % "junit" % "4.12" % "test",
 	"commons-cli" % "commons-cli" % "1.3.1",
