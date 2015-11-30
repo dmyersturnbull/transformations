@@ -25,12 +25,13 @@ public class CommandLineHelper {
 
 	private static final int sf_helpWidth = 120;
 
-	private Optional<Class<?>> m_class; // null is ok; probably Class<? extends DataTransformation>
+	private Optional<Class<?>> m_class; // null is NOT ok; probably Class<? extends DataTransformation>
 	private String m_helpHeader; // null is ok
 	private String m_helpFooter; // null is ok
 	private Options m_options = new Options();
 
 	public CommandLineHelper() {
+        m_class = Optional.empty();
 		m_options.addOption("h", "help", false, "Print usage");
 	}
 
@@ -94,7 +95,7 @@ public class CommandLineHelper {
 
 	public void printHelp(@Nonnull PrintWriter pw) {
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp(pw, sf_helpWidth, m_class.map(Class::getSimpleName).orElse(null),
+		formatter.printHelp(pw, sf_helpWidth, m_class.map(Class::getSimpleName).orElse("<unknown class>"),
 		                    m_helpHeader, m_options, 0, 0, m_helpFooter, true);
         pw.flush();
 	}

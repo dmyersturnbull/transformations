@@ -12,8 +12,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * A more modern {@link CommandLine} that uses {@link Optional Optionals} and has some simple converters.
@@ -80,12 +84,22 @@ public class ExtendedCommandLine {
 		return get(opt).map(File::new);
 	}
 
-	@Nonnull
-	public Optional<Path> getPath(@Nonnull String opt) {
-		return get(opt).map(Paths::get);
-	}
+    @Nonnull
+    public Optional<Path> getPath(@Nonnull String opt) {
+        return get(opt).map(Paths::get);
+    }
 
-	@Nonnull
+    @Nonnull
+    public List<String> getList(@Nonnull String opt) {
+        return Arrays.asList(m_commandLine.getOptionValues(opt));
+    }
+
+    @Nonnull
+    public <T> List<T> getListOf(@Nonnull String opt, final Function<String, T> converter) {
+        return Arrays.asList(m_commandLine.getOptionValues(opt)).stream().map(converter).collect(Collectors.toList());
+    }
+
+    @Nonnull
 	public Optional<URI> getUri(@Nonnull String opt) throws URISyntaxException {
 		return get(opt).map((str) -> {
 			try {
