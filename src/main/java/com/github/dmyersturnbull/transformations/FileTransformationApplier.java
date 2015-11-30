@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
 
 /**
@@ -51,7 +52,9 @@ public class FileTransformationApplier {
 			sf_logger.info("Transforming {} to {}", input.getPath(), output.getPath());
 			// note that the output will be gzipped if its filename extension calls for it
 			// similarly, the input will be read as gzip if its filename extension calls for it
-			m_transformation.apply(FileTransformationUtils.getFastReader(input), FileTransformationUtils.getFastWriter(output));
+            PrintWriter writer = FileTransformationUtils.getFastWriter(output);
+			m_transformation.apply(FileTransformationUtils.getFastReader(input), writer);
+            writer.flush(); // just to be sure, in case the transformation forgot
 			sf_logger.info("Done transforming {} to {}", input.getPath(), output.getPath());
 		} catch (RuntimeException e) {
 			throw new RuntimeException("Error while transforming file " + input.getPath() + " to " + output.getPath(), e);

@@ -44,7 +44,10 @@ public interface DataTransformation {
 	 * This should not be overridden.
 	 */
 	default void pipe() throws IOException {
-		apply(FileTransformationUtils.stdin(), FileTransformationUtils.stdout());
+        PrintWriter out = FileTransformationUtils.stdout();
+		apply(FileTransformationUtils.stdin(), out);
+        out.flush();
+
 	}
 
 	/**
