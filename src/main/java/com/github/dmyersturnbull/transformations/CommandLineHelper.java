@@ -25,7 +25,7 @@ public class CommandLineHelper {
 
 	private static final int sf_helpWidth = 120;
 
-	private Optional<Class<? extends DataTransformation>> m_class; // null is ok
+	private Optional<Class<?>> m_class; // null is ok; probably Class<? extends DataTransformation>
 	private String m_helpHeader; // null is ok
 	private String m_helpFooter; // null is ok
 	private Options m_options = new Options();
@@ -35,7 +35,7 @@ public class CommandLineHelper {
 	}
 
 	@Nonnull
-	public CommandLineHelper setClass(@Nullable Class<? extends DataTransformation> aClass) {
+	public CommandLineHelper setClass(@Nullable Class<?> aClass) {
 		m_class = Optional.ofNullable(aClass);
 		return this;
 	}
@@ -65,7 +65,7 @@ public class CommandLineHelper {
 	 * @return {@code Optional.empty()} if the command line should not be run, or the values parsed otherwise
 	 */
 	@Nonnull
-	public Optional<ExtendedCommandLine> parse(@Nonnull String[] args) {
+	public Optional<ExtendedCommandLine> parse(@Nonnull String... args) {
 
 		ExtendedCommandLine cli;
 
@@ -96,6 +96,7 @@ public class CommandLineHelper {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp(pw, sf_helpWidth, m_class.map(Class::getSimpleName).orElse(null),
 		                    m_helpHeader, m_options, 0, 0, m_helpFooter, true);
+        pw.flush();
 	}
 
 }
