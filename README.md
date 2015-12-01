@@ -12,9 +12,9 @@ public static void main(String[] args) {
 			.setClass(Example.class) // optional; currently only used for help message
 			.setHelpHeader("This is an optional header")
 			.setHelpFooter("This is an optional footer")
-			.addOptions(Option.builder("m").longOpt("multiplier").hasArgs().argName("float").required().build()) // required option for build
-			.addOptions(Option.builder().argName("c").longOpt("count").argName("int").numberOfArgs(Option.UNLIMITED_VALUES).build())
-			.addOptions(Option.builder().argName("r").longOpt("restart").desc("Restart from scratch").build())
+			.addOptions(Option.builder("m").longOpt("multiplier").hasArgs().argName("float").required().build())
+			.addOptions(Option.builder("c").longOpt("count").numberOfArgs(Option.UNLIMITED_VALUES).build())
+			.addOptions(Option.builder("r").longOpt("restart").desc("Restart from scratch").build())
 			.parse(args);
 
 	if (cli.isPresent()) { // true if -h or --help wasn't called, and no error occurred
