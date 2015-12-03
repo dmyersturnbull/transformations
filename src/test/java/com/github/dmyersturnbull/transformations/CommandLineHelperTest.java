@@ -42,6 +42,14 @@ public class CommandLineHelperTest {
 		assertEquals(Arrays.asList(1, 2, 3), cl.get().getListOf("t", Integer::new));
 	}
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testDuplicateOption() throws Exception {
+        new CommandLineHelper()
+                .addOptions(Option.builder().argName("test").longOpt("test").build())
+                .addOptions(Option.builder().argName("test").longOpt("test").required().build())
+                .parse();
+    }
+
 	@Test
 	public void testPrintHelp() throws Exception {
 		StringWriter sw = new StringWriter();

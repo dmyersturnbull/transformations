@@ -13,7 +13,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * A skeleton Apache Commons CLI handler.
@@ -30,9 +32,14 @@ public class CommandLineHelper {
 	private String m_helpFooter; // null is ok
 	private Options m_options = new Options();
 
+    private Set<String> m_shortNames;
+    private Set<String> m_longNames;
+
 	public CommandLineHelper() {
         m_class = Optional.empty();
 		m_options.addOption("h", "help", false, "Print usage");
+        m_shortNames = new HashSet<>();
+        m_longNames = new HashSet<>();
 	}
 
 	@Nonnull
@@ -57,6 +64,16 @@ public class CommandLineHelper {
 	public CommandLineHelper addOptions(@Nonnull Option... additionalOptions) {
 		for (Option option : additionalOptions) {
 			m_options.addOption(option);
+            if (m_shortNames.contains(option.getOpt())) {
+                throw new IllegalArgumentException("Option with short name " + option.getOpt() + " already exists");
+            }
+            m_shortNames.add(option.getOpt());
+            if (option.getLongOpt() != null) {
+                if (m_longNames.contains(option.getLongOpt())) {
+                    throw new IllegalArgumentException("Option with long name " + option.getLongOpt() + " already exists");
+                }
+                m_longNames.add(option.getLongOpt());
+            }
 		}
 		return this;
 	}

@@ -46,6 +46,7 @@ public class Example implements DataTransformation, Function<String, String> {
 				.setClass(Example.class)
 				.addOptions(Option.builder("u").longOpt("url").hasArgs().required().build())
 				.run(args);
+		// the optional arguments -i/--input and -o/--output are added transparently
 	}
 
 	@Nonnull
