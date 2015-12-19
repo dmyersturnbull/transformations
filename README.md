@@ -2,7 +2,7 @@
 A pragmatic and simple Java 8 package that provides:
   * A convenience wrapper for Apache Commons CLI, which has design flaws dating back to 2002.
   * A framework for applying transformations to files and streams.
-The framework will apply the transformation on stdin, a single file, or files in a directory matching a file. Gzip is applied transparently.
+The framework will apply the transformation on stdin, a single file, or files in a directory matching a filter. Gzip is applied transparently.
 
 Example of using the CLI helper alone:
 ```java
