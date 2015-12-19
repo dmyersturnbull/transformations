@@ -1,5 +1,5 @@
 # transformations
-A simple Java 8 package that provides:
+A pragmatic and simple Java 8 package that provides:
   * A convenience wrapper for Apache Commons CLI, which has design flaws dating back to 2002.
   * A framework for applying transformations to files and streams.
 The framework will apply the transformation on stdin, a single file, or files in a directory matching a file. Gzip is applied transparently.
@@ -69,3 +69,7 @@ public class Example implements DataTransformation, Function<String, String> {
 	}
 }
 ```
+
+### License
+
+The software is licensed under the Apache License, Version 2.0 by [PharmGKB](https://www.pharmgkb.org/) and Douglas Myers-Turnbull.
