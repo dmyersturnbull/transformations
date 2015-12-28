@@ -6,7 +6,7 @@ The framework will apply the transformation on stdin, a single file, or files in
 
 Example of using the CLI helper alone:
 ```java
-public static void main(String[] args) {
+public static void main(@Nonnull String... args) {
 
 	Optional<ExtendedCommandLine> cli = new CommandLineHelper()
 			.setClass(Example.class) // optional; currently only used for help message
@@ -27,7 +27,7 @@ public static void main(String[] args) {
 
 Example of using the transformation framework:
 ```java
-public class Example implements DataTransformation, Function<String, String> {
+public class Example implements DataTransformation {
 
 	private final String m_text;
 
@@ -41,7 +41,7 @@ public class Example implements DataTransformation, Function<String, String> {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(@Nonnull String... args) throws Exception {
 		new DataTransformationRunner(cli -> new Example(cli.getUrl("u").get()))
 				.setClass(Example.class)
 				.addOptions(Option.builder("u").longOpt("url").hasArgs().required().build())
@@ -49,23 +49,16 @@ public class Example implements DataTransformation, Function<String, String> {
 		// the optional arguments -i/--input and -o/--output are added transparently
 	}
 
-	@Nonnull
 	@Override
-	public FileFilter getApplicableFiles() {
+	@Nonnull public FileFilter getApplicableFiles() {
 		// if apply(File, File) in the interface is called on directories, each matching file will be transformed
 		return f -> f.getName().endsWith(".txt") || f.getName().endsWith(".txt.gz");
 	}
 
 	@Override
 	public void apply(@Nonnull BufferedReader br, @Nonnull PrintWriter pw) throws IOException {
-		br.lines().map(this).forEach(pw::println);
+		br.lines().map(s -> s + m_text).forEach(pw::println);
 		// the PrintWriter is subject to an automatic final flush
-	}
-
-	@Nonnull
-	@Override
-	public String apply(@Nonnull String s) {
-		return s + m_text;
 	}
 }
 ```
